@@ -1,13 +1,30 @@
-import mongoose from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 
-const UserSchema = new mongoose.Schema({
-    username: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    email:{type:String ,required:true,unique:true },
-    // This stores the unique token of their current active device
-    currentSessionToken: { type: String, default: '' },
-    // This will store the 128-number face array during Phase 4
-    faceDescriptor: { type: [Number], default: [] }
-});
+export interface IUser extends Document {
+    username: string;
+    password: string;
+    email: string;
+    avatarUrl: string | null;
+    currentSessionToken: string;
+    faceDescriptor: number[];
+    isActive: boolean; // was missing — Teacher had it, User didn't
+    createdAt: Date;
+    updatedAt: Date;
+}
 
-export const User = mongoose.model('User', UserSchema);
+const UserSchema = new Schema<IUser>(
+    {
+        username: { type: String, required: true, unique: true, trim: true },
+        password: { type: String, required: true, select: false },
+        email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+        avatarUrl: { type: String, default: null },
+        // Stores the unique token of their current active device
+        currentSessionToken: { type: String, default: '', select: false },
+        // 128-number face descriptor array (Phase 4)
+        faceDescriptor: { type: [Number], default: [] },
+        isActive: { type: Boolean, default: true },
+    },
+    { timestamps: true } // was missing — no createdAt/updatedAt before
+);
+
+export const User = mongoose.model<IUser>('User', UserSchema);
