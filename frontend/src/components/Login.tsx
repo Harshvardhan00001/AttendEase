@@ -40,11 +40,18 @@ export const Login: React.FC = () => {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // Store the JWT in localStorage for later API calls
+        // Store the JWT and role in localStorage for later API calls
         localStorage.setItem('token', data.token);
         localStorage.setItem('role', role);
         setSuccessMessage('Login successful! Redirecting…');
-        setTimeout(() => navigate('/'), 800);
+        // Navigate to the correct dashboard based on role
+        setTimeout(() => {
+          if (role === 'teacher') {
+            navigate('/teacher-dashboard');
+          } else {
+            navigate('/student-dashboard');
+          }
+        }, 800);
       } else {
         setErrorMessage(data.message || 'Invalid credentials.');
       }
@@ -79,22 +86,20 @@ export const Login: React.FC = () => {
           <button
             type="button"
             onClick={() => { setRole('student'); setErrorMessage(''); setSuccessMessage(''); }}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-bold rounded-xl transition ${
-              role === 'student'
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-bold rounded-xl transition ${role === 'student'
                 ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm'
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-800'
-            }`}
+              }`}
           >
             <GraduationCap className="w-4 h-4" /> Student
           </button>
           <button
             type="button"
             onClick={() => { setRole('teacher'); setErrorMessage(''); setSuccessMessage(''); }}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-bold rounded-xl transition ${
-              role === 'teacher'
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-bold rounded-xl transition ${role === 'teacher'
                 ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm'
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-800'
-            }`}
+              }`}
           >
             <BookOpen className="w-4 h-4" /> Teacher
           </button>
