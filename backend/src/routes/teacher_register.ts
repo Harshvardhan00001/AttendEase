@@ -3,13 +3,14 @@ import { Router, type Request, type Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { Teacher } from '../models/Teacher.js';
+import { verifyEmailDomain } from '../middlewares/VerifyEmail.js';
 
 const router = Router();
 
 // ─────────────────────────────────────────────
 // POST /api/auth/teacher/register
 // ─────────────────────────────────────────────
-router.post('/register', async (req: Request, res: Response) => {
+router.post('/register', verifyEmailDomain, async (req: Request, res: Response) => {
     try {
         const { name, email, password, department } = req.body;
 
@@ -70,8 +71,8 @@ router.post('/login', async (req: Request, res: Response) => {
             return res.status(400).json({ success: false, message: 'Email and password are required.' });
         }
 
-        // 2. Find teacher by email
-        const teacher = await Teacher.findOne({ email: email.toLowerCase() });
+        // 2. Find teacher by email — must explicitly select password (it has select:false)
+        const teacher = await Teacher.findOne({ email: email.toLowerCase() }).select('+password +currentSessionToken');
         if (!teacher) {
             return res.status(401).json({ success: false, message: 'Invalid credentials.' });
         }
