@@ -17,7 +17,8 @@ router.post('/login', async (req: Request, res: Response) => {
         }
 
         // 2. Find teacher by email
-        const teacher = await Teacher.findOne({ email: email.toLowerCase() });
+        // Find teacher and explicitly include password (select:false in schema)
+        const teacher = await Teacher.findOne({ email: email.toLowerCase() }).select('+password +currentSessionToken');
         if (!teacher) {
             return res.status(401).json({ success: false, message: 'Invalid credentials.' });
         }
