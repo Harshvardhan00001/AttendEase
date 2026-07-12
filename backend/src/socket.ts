@@ -13,7 +13,7 @@ export const initSocket = (server: HttpServer, frontendUrl: string): SocketIOSer
   });
 
   io.on('connection', (socket: Socket) => {
-    logger.debug(`Socket connected: ${socket.id}`);
+    // logger.debug(`Socket connected: ${socket.id}`);
 
     socket.on('join', (data: { workplaceId: string; role: 'student' | 'teacher' }) => {
       const { workplaceId, role } = data;
@@ -21,15 +21,15 @@ export const initSocket = (server: HttpServer, frontendUrl: string): SocketIOSer
 
       if (role === 'teacher') {
         socket.join(`teacher:${workplaceId}`);
-        logger.debug(`Teacher socket joined room: teacher:${workplaceId}`);
+        // logger.debug(`Teacher socket joined room: teacher:${workplaceId}`);
       } else {
         socket.join(`workplace:${workplaceId}`);
-        logger.debug(`Student socket joined room: workplace:${workplaceId}`);
+        // logger.debug(`Student socket joined room: workplace:${workplaceId}`);
       }
     });
 
     socket.on('disconnect', () => {
-      logger.debug(`Socket disconnected: ${socket.id}`);
+      // logger.debug(`Socket disconnected: ${socket.id}`);
     });
   });
 
