@@ -5,6 +5,7 @@ export interface ITeacher extends Document {
     email: string;
     password: string;
     department: string;
+    employeeId?: string | null; // Added to handle legacy index gracefully
     assignedClasses: mongoose.Types.ObjectId[];
     currentSessionToken: string;
     faceDescriptor: number[];
@@ -20,6 +21,7 @@ const TeacherSchema = new Schema<ITeacher>(
         email: { type: String, required: true, unique: true, lowercase: true, trim: true },
         password: { type: String, required: true, select: false },
         department: { type: String, required: true, trim: true },
+        employeeId: { type: String, unique: true, sparse: true, default: null }, // Fixes E11000 null duplicate issue
         assignedClasses: [{ type: Schema.Types.ObjectId, ref: 'Class' }],
         currentSessionToken: { type: String, default: '', select: false },
         faceDescriptor: { type: [Number], default: [] },

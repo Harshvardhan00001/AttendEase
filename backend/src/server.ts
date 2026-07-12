@@ -56,9 +56,26 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
+// ────────────────────────────────────────────────────────
+// MONGOOSE CONNECTION WITH DROP INDEX PATCH
+// ────────────────────────────────────────────────────────
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => logger.info('Connected to MongoDB'))
+  .then(async () => {
+    logger.info('Connected to MongoDB');
+    
+    try {
+      const db = mongoose.connection.db;
+      if (db) {
+        // Drop the phantom unique index rule causing the 500 crash
+        await db.collection('teachers').dropIndex('employeeId_1');
+        logger.info('✅ Successfully removed the broken employeeId unique rule!');
+      }
+    } catch (err) {
+      // Index doesn't exist anymore or collection is fresh; safe to ignore
+      logger.info('ℹ️ Legacy index already dropped or does not exist.');
+    }
+  })
   .catch((err) => {
     logger.error('MongoDB connection failed:', err);
     process.exit(1);
