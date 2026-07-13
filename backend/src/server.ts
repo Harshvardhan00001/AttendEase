@@ -39,7 +39,7 @@ if (!process.env.JWT_SECRET) {
 const allowedOrigins = [
   'http://localhost:5173',
   'http://127.0.0.1:5173',
-  'https://attend-ease-hwmwi4fkc-harshvardhan2672-4132s-projects.vercel.app'
+  'https://attend-ease-4kaakim2y-harshvardhan2672-4132s-projects.vercel.app'
 ];
 
 app.use(
