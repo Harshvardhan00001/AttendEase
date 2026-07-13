@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GraduationCap, BookOpen, LogIn, Shield, AlertCircle, CheckCircle } from 'lucide-react';
-const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 export const Login: React.FC = () => {
   const navigate = useNavigate();
   const [role, setRole] = useState<'student' | 'teacher'>('student');
@@ -26,8 +26,8 @@ export const Login: React.FC = () => {
       // Pick the right endpoint and payload based on the selected role
       const url =
         role === 'student'
-       ? `${API_URL}/api/auth/login`
-     : `${API_URL}/api/auth/teacher/login`;
+          ? `${API_URL}/auth/login`
+          : `${API_URL}/auth/teacher/login`;
 
       const payload = role === 'student' ? studentData : teacherData;
 
