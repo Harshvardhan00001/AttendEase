@@ -22,7 +22,6 @@ dotenv.config();
 const app = express();
 const PORT = Number(process.env.PORT) || 5000;
 const isProd = process.env.NODE_ENV === 'production';
-const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
 
 if (!process.env.MONGO_URI) {
   logger.error('MONGO_URI is required. Copy backend/.env.example to backend/.env and configure it.');
@@ -34,9 +33,32 @@ if (!process.env.JWT_SECRET) {
   process.exit(1);
 }
 
-const corsOrigin = isProd ? frontendUrl : [frontendUrl, 'http://localhost:5173', 'http://127.0.0.1:5173'];
+// ────────────────────────────────────────────────────────
+// HARDCODED CORS ORIGIN PATCH
+// ────────────────────────────────────────────────────────
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'https://attend-ease-hwmwi4fkc-harshvardhan2672-4132s-projects.vercel.app'
+];
 
-app.use(cors({ origin: corsOrigin, credentials: true }));
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
+    credentials: true,
+    optionsSuccessStatus: 200
+  })
+);
+
 app.use(express.json({ limit: '1mb' }));
 app.use(cookieParser());
 app.use(
@@ -82,7 +104,10 @@ mongoose
   });
 
 const httpServer = createServer(app);
-initSocket(httpServer, frontendUrl);
+
+// Use your exact Vercel production URL for fallback matching in socket initialization
+const socketOrigin = 'https://attend-ease-hwmwi4fkc-harshvardhan2672-4132s-projects.vercel.app';
+initSocket(httpServer, socketOrigin);
 
 app.use('/api/auth', studentRegisterRouter);
 app.use('/api/auth', studentLoginRouter);
