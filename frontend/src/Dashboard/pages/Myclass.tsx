@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, ToggleLeft, ToggleRight, Copy, Check, Users, Radio, MapPin, Key, Trash2, ChevronLeft, UserCheck, UserX, Clock, CheckCircle2} from 'lucide-react';
+import { Plus, ToggleLeft, ToggleRight, Copy, Check, Users, Radio, Key, Trash2, ChevronLeft, UserCheck, UserX, Clock, CheckCircle2} from 'lucide-react';
 
 // ---------- Types ----------
 interface Classroom {
@@ -241,9 +241,6 @@ export default function MyClass({ workplaces, onCreateClick, onToggleLive, onDel
                                 <span>{new Date(log.timestamp).toLocaleString()}</span>
                               </div>
                               <div className="flex items-center gap-2">
-                                <span className={`font-semibold ${log.networkVerified ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
-                                  {log.networkVerified ? '✓ Network OK' : '⚠ Off-network'}
-                                </span>
                                 <span className="text-emerald-600 dark:text-emerald-400 font-bold uppercase">{log.status}</span>
                               </div>
                             </div>
@@ -321,10 +318,6 @@ export default function MyClass({ workplaces, onCreateClick, onToggleLive, onDel
                   <div className="flex items-center gap-2">
                     <Users size={16} className="text-slate-400" />
                     <span>Approved Students: <strong className="text-slate-800 dark:text-zinc-100 font-bold">{w.studentCount}</strong></span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin size={16} className="text-slate-400" />
-                    <span className="truncate">Network IP: <code className="font-mono text-xs bg-slate-50 dark:bg-zinc-900 px-1.5 py-0.5 rounded">{w.pinnedIP}</code></span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Key size={16} className="text-slate-400" />

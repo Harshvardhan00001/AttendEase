@@ -123,7 +123,6 @@ export default function Teacher() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [className, setClassName] = useState('');
   const [subject, setSubject] = useState('');
-  const [pinnedIP, setPinnedIP] = useState('127.0.0.1');
   const [isSubmittingClass, setIsSubmittingClass] = useState(false);
 
   // Real-time Clock Effect
@@ -236,16 +235,14 @@ export default function Teacher() {
         body: JSON.stringify({
           name: className,
           subjectDetails: subject,
-          pinnedIP,
         }),
       });
       setClassName('');
       setSubject('');
-      setPinnedIP('127.0.0.1');
       setIsModalOpen(false);
       fetchDashboard();
     } catch (err: any) {
-      alert(`Error creating classroom: ${err.message || 'Check IP configuration'}`);
+      alert(`Error creating classroom: ${err.message || 'Please try again.'}`);
     } finally {
       setIsSubmittingClass(false);
     }
@@ -502,19 +499,6 @@ export default function Teacher() {
                           </span>
                         </div>
                       </div>
-
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-slate-400 dark:text-zinc-500 hidden sm:inline">Network Verification:</span>
-                        <span
-                          className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded border ${
-                            alert.networkVerified
-                              ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-500/20'
-                              : 'bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-100 dark:border-rose-500/20'
-                          }`}
-                        >
-                          {alert.networkVerified ? 'MATCHED' : 'FAIL'}
-                        </span>
-                      </div>
                     </div>
                   ))}
                 </div>
@@ -584,18 +568,6 @@ export default function Teacher() {
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   className="w-full px-3.5 py-2 rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900/50 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs uppercase tracking-wider font-bold text-gray-400 mb-1.5">Pinned Network IP Address</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g., 127.0.0.1 or 192.168.1.1"
-                  value={pinnedIP}
-                  onChange={(e) => setPinnedIP(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900/50 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-mono transition-all"
                 />
               </div>
 

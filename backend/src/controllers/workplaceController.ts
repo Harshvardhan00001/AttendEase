@@ -6,6 +6,7 @@ import { Membership } from '../models/Membership.js';
 import { AttendanceLog } from '../models/AttendanceLog.js';
 import { User } from '../models/User.js';
 import { notifyAttendanceToggled, notifyAttendanceMarked } from '../socket.js';
+import { extractClientIp } from '../middlewares/verifyNetwork.js';
 import { getTodayUtcBounds } from '../utils/attendanceDate.js';
 import { respondWithServerError } from '../utils/errorResponse.js';
 
@@ -14,7 +15,6 @@ import { respondWithServerError } from '../utils/errorResponse.js';
 const createWorkplaceSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   subjectDetails: z.string().min(1, 'Subject details are required'),
-  pinnedIP: z.string().regex(/^[a-fA-F0-9.:]+$/, 'A valid IP address is required'),
 });
 
 const requestToJoinSchema = z.object({
@@ -73,7 +73,7 @@ export const createWorkplace = async (req: Request, res: Response): Promise<Resp
       return res.status(400).json({ success: false, errors: parsed.error.format() });
     }
 
-    const { name, subjectDetails, pinnedIP } = parsed.data;
+    const { name, subjectDetails } = parsed.data;
     const userId = (req as any).userId;
     const role = (req as any).role;
 
@@ -83,6 +83,12 @@ export const createWorkplace = async (req: Request, res: Response): Promise<Resp
     }
 
     const joinCode = await generateJoinCode();
+
+    // Auto-capture the teacher's current IP as the classroom's pinned network,
+    // instead of requiring manual entry. The teacher is making this exact
+    // request from the classroom network at creation time, so this is a
+    // more reliable source of truth than a hand-typed IP address.
+    const pinnedIP = extractClientIp(req) || '127.0.0.1';
 
     const workplace = new Workplace({
       name,
@@ -95,7 +101,9 @@ export const createWorkplace = async (req: Request, res: Response): Promise<Resp
 
     await workplace.save();
 
-    return res.status(210).json({
+    // NOTE: was res.status(210) — 210 is not a standard HTTP status code.
+    // 201 Created is correct for a successful resource-creation response.
+    return res.status(201).json({
       success: true,
       message: 'Workplace created successfully.',
       workplace,
@@ -280,6 +288,18 @@ export const markAttendance = async (req: Request, res: Response): Promise<Respo
 
     if (!workplace.isLive) {
       return res.status(400).json({ success: false, message: 'Attendance window is closed for this workplace.' });
+    }
+
+    // ── NETWORK VERIFICATION ENFORCEMENT ─────────────────────────
+    // Previously `networkVerified` was only recorded on the log and never
+    // actually checked here, so a student off the registered network could
+    // still mark attendance. Per the spec (docs/architecture.md §3 / plan.md),
+    // both network AND face checks must pass before attendance is accepted.
+    if (!networkVerified) {
+      return res.status(403).json({
+        success: false,
+        message: 'Network verification failed. You must be on the classroom network to mark attendance.',
+      });
     }
 
     // Verify approved membership and biometrics

@@ -15,7 +15,6 @@ import {
   X,
   Scan,
   Shield,
-  MapPin,
   Check,
   UserCheck,
   Zap,
@@ -111,7 +110,6 @@ export default function StudentDashboard() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [classes, setClasses] = useState<WorkplaceSummary[] | null>(null);
   const [attendance, setAttendance] = useState<AttendanceRecord[] | null>(null);
-  const [clientIp, setClientIp] = useState<string>('Unknown');
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -164,7 +162,6 @@ export default function StudentDashboard() {
     apiFetch<{ success: boolean; profile: UserProfile; clientIp: string; workplaces: WorkplaceSummary[]; attendance: AttendanceRecord[] }>('/auth/dashboard/student')
       .then((data) => {
         setProfile(data.profile);
-        setClientIp(data.clientIp || 'Unknown');
         setClasses(data.workplaces);
         setAttendance(data.attendance);
       })
@@ -588,7 +585,6 @@ export default function StudentDashboard() {
             <Activity className="text-blue-500 animate-pulse" size={24} />
             <div>
               <span className="text-sm font-bold tracking-wide">AttendEase Dashboard</span>
-              <p className="text-[10px] text-slate-400 dark:text-zinc-500 font-mono mt-0.5">IP: <span className="font-semibold">{clientIp}</span></p>
             </div>
           </div>
 
@@ -731,20 +727,19 @@ export default function StudentDashboard() {
                       const isApproved = c.status === 'approved';
                       const isLive = c.activeSession;
                       const hasBio = c.hasBiometrics;
-                      const networkOk = c.networkMatched;
                       const checkedIn = c.checkedInToday;
 
                       return (
                         <div
                           key={c.id}
                           className={`bg-white dark:bg-[#0f111a] border rounded-3xl p-5 shadow-sm transition-all relative overflow-hidden flex flex-col justify-between hover:shadow-md ${
-                            isLive && isApproved && networkOk
+                            isLive && isApproved
                               ? 'border-emerald-500/50 dark:border-emerald-500/30 ring-1 ring-emerald-500/20 bg-gradient-to-tr from-white to-emerald-500/5 dark:from-[#0f111a] dark:to-emerald-950/10'
                               : 'border-slate-200/80 dark:border-zinc-800/80'
                           }`}
                         >
                           {/* Live portal neon header decoration */}
-                          {isLive && isApproved && networkOk && (
+                          {isLive && isApproved && (
                             <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-emerald-500/10 to-transparent rounded-bl-full pointer-events-none" />
                           )}
 
@@ -775,35 +770,17 @@ export default function StudentDashboard() {
 
                             {/* Details list */}
                             <div className="space-y-2 my-4 text-xs text-slate-500 dark:text-zinc-400">
-                              <div className="flex items-center justify-between">
-                                <span>Router Pinned IP:</span>
-                                <code className="font-mono bg-slate-50 dark:bg-zinc-900 px-1.5 py-0.5 rounded text-slate-700 dark:text-zinc-300 truncate max-w-[150px]">{c.pinnedIP}</code>
-                              </div>
                               {isApproved && (
-                                <>
-                                  <div className="flex items-center justify-between">
-                                    <span>Face Descriptor:</span>
-                                    {hasBio ? (
-                                      <span className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
-                                        <Check size={12} /> Set up
-                                      </span>
-                                    ) : (
-                                      <span className="text-rose-500 font-semibold">Not enrolled</span>
-                                    )}
-                                  </div>
-                                  <div className="flex items-center justify-between">
-                                    <span>Classroom Network:</span>
-                                    {networkOk ? (
-                                      <span className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
-                                        <Check size={12} /> Verified
-                                      </span>
-                                    ) : (
-                                      <span className="text-rose-500 font-semibold flex items-center gap-1">
-                                        <AlertTriangle size={12} /> Mismatch
-                                      </span>
-                                    )}
-                                  </div>
-                                </>
+                                <div className="flex items-center justify-between">
+                                  <span>Face Descriptor:</span>
+                                  {hasBio ? (
+                                    <span className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                                      <Check size={12} /> Set up
+                                    </span>
+                                  ) : (
+                                    <span className="text-rose-500 font-semibold">Not enrolled</span>
+                                  )}
+                                </div>
                               )}
                             </div>
                           </div>
@@ -831,29 +808,23 @@ export default function StudentDashboard() {
                                     <Camera size={12} /> Setup Scan
                                   </button>
                                 ) : isLive ? (
-                                  networkOk ? (
-                                    checkedIn ? (
-                                      <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/10 px-2.5 py-1 rounded-lg flex items-center gap-1 border border-emerald-500/20">
-                                        <CheckCircle size={10} /> Checked In
-                                      </span>
-                                    ) : (
-                                      <button
-                                        onClick={() => {
-                                          setSelectedClass(c);
-                                          setMarkingStep('idle');
-                                          setMarkingError(null);
-                                          setCameraError(null);
-                                          setAttendanceModalOpen(true);
-                                        }}
-                                        className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1 transition-all shadow-md shadow-emerald-500/10 animate-bounce active:scale-95"
-                                      >
-                                        <UserCheck size={12} /> Check In
-                                      </button>
-                                    )
-                                  ) : (
-                                    <span className="text-[10px] text-amber-500 font-bold bg-amber-500/10 px-2 py-1 rounded-lg flex items-center gap-1">
-                                      <MapPin size={10} /> Out of Zone
+                                  checkedIn ? (
+                                    <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/10 px-2.5 py-1 rounded-lg flex items-center gap-1 border border-emerald-500/20">
+                                      <CheckCircle size={10} /> Checked In
                                     </span>
+                                  ) : (
+                                    <button
+                                      onClick={() => {
+                                        setSelectedClass(c);
+                                        setMarkingStep('idle');
+                                        setMarkingError(null);
+                                        setCameraError(null);
+                                        setAttendanceModalOpen(true);
+                                      }}
+                                      className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1 transition-all shadow-md shadow-emerald-500/10 animate-bounce active:scale-95"
+                                    >
+                                      <UserCheck size={12} /> Check In
+                                    </button>
                                   )
                                 ) : (
                                   <span className="text-[10px] text-slate-400 font-medium italic">Closed</span>
@@ -923,7 +894,7 @@ export default function StudentDashboard() {
                             >
                               <div className="min-w-0 mr-2">
                                 <p className="text-xs font-bold text-slate-800 dark:text-zinc-200 truncate">{r.workplaceName}</p>
-                                <p className="text-[10px] text-slate-400 dark:text-zinc-500 mt-0.5">{r.date} • {r.networkVerified ? 'Network OK' : 'No Network'}</p>
+                                <p className="text-[10px] text-slate-400 dark:text-zinc-500 mt-0.5">{r.date}</p>
                               </div>
                               <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-lg border shrink-0 ${s.text} ${s.bg} ${s.border}`}>
                                 <StatusIcon size={10} />
@@ -1101,14 +1072,6 @@ export default function StudentDashboard() {
                       {cameraError}
                     </div>
                   )}
-                </div>
-                
-                <div className="text-[11px] text-slate-400 bg-slate-50 dark:bg-zinc-900/60 p-3 rounded-2xl flex items-center justify-between border border-slate-100 dark:border-zinc-800/80">
-                  <div className="flex items-center gap-1.5">
-                    <MapPin size={12} className="text-emerald-500" />
-                    <span>Device IP status:</span>
-                  </div>
-                  <span className="font-bold text-emerald-600 dark:text-emerald-400">NETWORK MATCHED</span>
                 </div>
 
                 <button

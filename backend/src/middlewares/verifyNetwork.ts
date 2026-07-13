@@ -1,6 +1,8 @@
 import type { Request, Response, NextFunction } from 'express';
 import { Workplace } from '../models/Workplace.js';
 
+const isProd = process.env.NODE_ENV === 'production';
+
 export const isSimilarIP = (ip1: string, ip2: string): boolean => {
   const cleanIp = (ip: string) => {
     let clean = ip.trim();
@@ -28,12 +30,30 @@ export const isSimilarIP = (ip1: string, ip2: string): boolean => {
     }
   }
 
-  // Fallback: if either is localhost/loopback, they are considered similar for local dev convenience
-  if (a === '127.0.0.1' || b === '127.0.0.1') {
+  // Fallback: treat localhost/loopback as "similar" ONLY outside production.
+  // This is a dev convenience so local testing doesn't require a real network match.
+  // Gating it behind isProd prevents a misconfigured proxy or edge case from
+  // silently auto-passing network verification in production.
+  if (!isProd && (a === '127.0.0.1' || b === '127.0.0.1')) {
     return true;
   }
 
   return false;
+};
+
+// Extracts the real client IP from the request, handling x-forwarded-for
+// (needed since Render and most hosts sit behind a reverse proxy).
+// Exported so other places (e.g. auto-capturing a teacher's IP on workplace
+// creation) can reuse the exact same extraction logic as verifyNetwork.
+export const extractClientIp = (req: Request): string => {
+  const xForwardedFor = req.headers['x-forwarded-for'];
+  if (xForwardedFor) {
+    if (Array.isArray(xForwardedFor)) {
+      return xForwardedFor[0] || '';
+    }
+    return xForwardedFor.split(',')[0]?.trim() || '';
+  }
+  return req.socket.remoteAddress || '';
 };
 
 export const verifyNetwork = async (
@@ -55,22 +75,10 @@ export const verifyNetwork = async (
       return next();
     }
 
-    // Extract client IP address, handling x-forwarded-for headers
-    let clientIp = '';
-    const xForwardedFor = req.headers['x-forwarded-for'];
-    if (xForwardedFor) {
-      if (Array.isArray(xForwardedFor)) {
-        clientIp = xForwardedFor[0] || '';
-      } else {
-        clientIp = xForwardedFor.split(',')[0]?.trim() || '';
-      }
-    } else {
-      clientIp = req.socket.remoteAddress || '';
-    }
-
+    const clientIp = extractClientIp(req);
     const pinnedIp = workplace.pinnedIP.trim();
     (req as any).networkVerified = isSimilarIP(clientIp, pinnedIp);
-    
+
     next();
   } catch (error) {
     console.error('[verifyNetwork] Error:', error);
@@ -78,4 +86,3 @@ export const verifyNetwork = async (
     next();
   }
 };
-
