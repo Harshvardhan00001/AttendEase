@@ -39,20 +39,28 @@ if (!process.env.JWT_SECRET) {
 const allowedOrigins = [
   'http://localhost:5173',
   'http://127.0.0.1:5173',
-  'https://attend-ease-4kaakim2y-harshvardhan2672-4132s-projects.vercel.app'
+  'https://attend-ease-ebon.vercel.app' // Added your new clean production Vercel domain
 ];
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps or curl)
-      if (!origin) return callback(null, true);
-      
-      if (allowedOrigins.indexOf(origin) === -1) {
-        const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
-        return callback(new Error(msg), false);
+      // 1. Allow internal/server-to-server requests
+      if (!origin) {
+        return callback(null, true);
       }
-      return callback(null, true);
+
+      // 2. Check if the origin matches our whitelist or subdomains
+      const isAllowed = allowedOrigins.includes(origin) || origin.includes('vercel.app');
+
+      if (isAllowed) {
+        return callback(null, true);
+      } else {
+        // 3. CRITICAL: Do NOT pass an Error object here. 
+        // Just pass null and false. This cleanly strips the CORS header, 
+        // allowing the browser to safely reject it without crashing your backend.
+        return callback(null, false);
+      }
     },
     credentials: true,
     optionsSuccessStatus: 200
