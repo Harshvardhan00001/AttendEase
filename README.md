@@ -2,6 +2,8 @@
 
 > Smart Attendance Management System with Face Verification & Network-Based Access Control
 
+LIVE LINK:https://attend-ease-ebon.vercel.app
+
 AttendEase is a web-based attendance system where teachers/admins manage student attendance using two layers of verification:
 
 1. **Network Verification** — the student's device must be on the same public IP / registered network as the workplace, so attendance can only be marked while physically on-premises (or on the same office/school WiFi).
