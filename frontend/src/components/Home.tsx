@@ -1,5 +1,5 @@
 
-import { Shield, Wifi, Sparkles, Camera, Fingerprint, LogIn, UserPlus } from 'lucide-react';
+import { Shield, Wifi, Sparkles, Camera, Fingerprint, LogIn, UserPlus,KeyRound } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 
 import { useNavigate } from 'react-router-dom';
@@ -52,23 +52,31 @@ export const Home= () => {
         </p>
         
         {/* Working Navigation Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto mb-16">
-          <button 
-            onClick={() => Navigate('/login')}
-            className="w-full sm:w-1/2 flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-2xl shadow-xl shadow-indigo-600/20 transition transform hover:-translate-y-0.5 active:scale-[0.99]"
-          >
-            <LogIn className="w-4 h-4" />
-            Sign In Account
-          </button>
-          
-          <button 
-            onClick={() => Navigate('/register')}
-            className="w-full sm:w-1/2 flex items-center justify-center gap-2 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 font-bold py-4 px-6 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm transition transform hover:-translate-y-0.5 active:scale-[0.99]"
-          >
-            <UserPlus className="w-4 h-4" />
-            Create Profile 
-          </button>
-        </div>
+        <div className="flex flex-col sm:flex-row items-stretch justify-center gap-3 max-w-2xl mx-auto mb-16">
+      <button 
+        onClick={() => Navigate('/login')}
+        className="w-full sm:w-1/3 flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-2xl shadow-xl shadow-indigo-600/20 transition transform hover:-translate-y-0.5 active:scale-[0.99]"
+      >
+        <LogIn className="w-4 h-4" />
+        Log In
+      </button>
+      
+      <button 
+        onClick={() => Navigate('/register')}
+        className="w-full sm:w-1/3 flex items-center justify-center gap-2 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 font-bold py-4 px-6 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm transition transform hover:-translate-y-0.5 active:scale-[0.99]"
+      >
+        <UserPlus className="w-4 h-4" />
+        Create Profile
+      </button>
+
+      <button 
+        onClick={() => Navigate('/demo')}
+        className="w-full sm:w-1/3 flex items-center justify-center gap-2 bg-amber-50 dark:bg-amber-500/10 hover:bg-amber-100 dark:hover:bg-amber-500/20 text-amber-700 dark:text-amber-400 font-bold py-4 px-6 rounded-2xl border-2 border-dashed border-amber-300 dark:border-amber-500/40 transition transform hover:-translate-y-0.5 active:scale-[0.99]"
+      >
+        <KeyRound className="w-4 h-4" />
+        Try Demo
+      </button>
+    </div>
 
         {/* Feature Grid Infographics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left border-t border-slate-200 dark:border-slate-800 pt-12">

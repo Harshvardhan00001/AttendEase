@@ -4,6 +4,7 @@ import { Login } from "./components/Login";
 import { Register } from "./components/Register";
 import User from "./Dashboard/User";
 import Teacher from "./Dashboard/Teacher";
+import DemoCredentials from "./components/DemoCredentials";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: "/teacher-dashboard",
     element: <Teacher />
+  },
+   {
+    path: "/demo",
+    element: <DemoCredentials />
   }
 
 ]);
