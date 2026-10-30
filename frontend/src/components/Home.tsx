@@ -1,112 +1,129 @@
-
-import { Shield, Wifi, Sparkles, Camera, Fingerprint, LogIn, UserPlus,KeyRound } from 'lucide-react';
-import { ThemeToggle } from './ThemeToggle';
-
+import { Wifi, Camera, Fingerprint, LogIn, UserPlus, KeyRound, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Logo } from './Logo';
 
-
-export const Home= () => {
-  const Navigate=useNavigate();
+export const Home = () => {
+  const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-300">
+    <div className="min-h-screen bg-transparent text-slate-900 font-sans">
       
       {/* Navigation Header */}
-      <header className="border-b border-slate-200/80 dark:border-slate-800 bg-white/70 dark:bg-slate-950/70 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+      <header className="border-b border-slate-200/60 bg-white/70 backdrop-blur-md sticky top-0 z-50 px-6 sm:px-8 py-3.5">
+        <div className="w-full flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-md shadow-indigo-600/20">
-              <Shield className="w-5 h-5" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-                Attend<span className="text-indigo-600 dark:text-indigo-400">Ease</span>
-              </h1>
-              <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium tracking-wide uppercase">Smart Campus Verification</p>
-            </div>
+            <Logo size="lg" showText versionBadge="v2.0" />
           </div>
           
-          <div className="flex items-center gap-4">
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900 text-xs text-emerald-700 dark:text-emerald-400 font-medium">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-xs text-emerald-700 font-medium">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              Campus Wi-Fi Connected
+              <span className="font-mono text-[11px]">Campus Subnet Verified</span>
             </div>
-            
-            {/* Theme Picker Dropdown Selection Component */}
-            <ThemeToggle />
           </div>
         </div>
       </header>
 
-      {/* Hero Core Panel */}
-      <main className="max-w-4xl mx-auto px-6 py-16 text-center">
-        <div className="inline-flex items-center gap-1.5 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-400 px-3 py-1 rounded-full text-xs font-semibold mb-6">
-          <Sparkles className="w-3.5 h-3.5" /> Next-Gen Biometric Matrix Locked
-        </div>
+      {/* Hero Section */}
+      <main className="relative max-w-5xl mx-auto px-6 py-16 sm:py-20 text-center">
+        <div className="relative z-10">
+          {/* Security Badge */}
+          <div className="inline-flex items-center gap-2 bg-indigo-50/90 backdrop-blur-sm text-indigo-700 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-6 border border-indigo-200/80 shadow-sm">
+            <ShieldCheck className="w-3.5 h-3.5 text-cyan-600" />
+            <span>Biometric Liveness Matrix Locked &bull; Zero Proxy Protocol</span>
+          </div>
 
-        <h2 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-4 max-w-2xl mx-auto leading-tight">
-          Your attendance marked instantly with <span className="text-indigo-600 dark:text-indigo-400">Face Recognition</span>
-        </h2>
-        <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto text-base mb-10 leading-relaxed">
-          No proxies. AttendEase checks your campus location perimeter and securely verifies your facial ID profile in seconds.
-        </p>
-        
-        {/* Working Navigation Buttons */}
-        <div className="flex flex-col sm:flex-row items-stretch justify-center gap-3 max-w-2xl mx-auto mb-16">
-      <button 
-        onClick={() => Navigate('/login')}
-        className="w-full sm:w-1/3 flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-2xl shadow-xl shadow-indigo-600/20 transition transform hover:-translate-y-0.5 active:scale-[0.99]"
-      >
-        <LogIn className="w-4 h-4" />
-        Log In
-      </button>
-      
-      <button 
-        onClick={() => Navigate('/register')}
-        className="w-full sm:w-1/3 flex items-center justify-center gap-2 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 font-bold py-4 px-6 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm transition transform hover:-translate-y-0.5 active:scale-[0.99]"
-      >
-        <UserPlus className="w-4 h-4" />
-        Create Profile
-      </button>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-slate-900 mb-6 max-w-3xl mx-auto leading-[1.12]">
+            Precision attendance with <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-600">cryptographic trust</span>
+          </h2>
+          
+          <p className="text-slate-600 max-w-xl mx-auto text-base sm:text-lg mb-10 leading-relaxed font-normal">
+            Tamper-proof check-ins engineered for high-security campus perimeters. Combines localized IP subnet validation with real-time facial biometric descriptors.
+          </p>
+          
+          {/* Working Navigation Buttons */}
+          <div className="flex flex-col sm:flex-row items-stretch justify-center gap-3.5 max-w-xl mx-auto mb-16">
+            <button 
+              onClick={() => navigate('/login')}
+              className="w-full sm:w-1/3 flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg shadow-indigo-600/25 transition transform hover:-translate-y-0.5 active:scale-[0.99]"
+            >
+              <LogIn className="w-4 h-4" />
+              Log In
+            </button>
+            
+            <button 
+              onClick={() => navigate('/register')}
+              className="w-full sm:w-1/3 flex items-center justify-center gap-2 bg-white/95 hover:bg-white text-slate-800 font-bold py-3.5 px-6 rounded-2xl border border-slate-200 shadow-sm transition transform hover:-translate-y-0.5 active:scale-[0.99]"
+            >
+              <UserPlus className="w-4 h-4" />
+              Create Profile
+            </button>
 
-      <button 
-        onClick={() => Navigate('/demo')}
-        className="w-full sm:w-1/3 flex items-center justify-center gap-2 bg-amber-50 dark:bg-amber-500/10 hover:bg-amber-100 dark:hover:bg-amber-500/20 text-amber-700 dark:text-amber-400 font-bold py-4 px-6 rounded-2xl border-2 border-dashed border-amber-300 dark:border-amber-500/40 transition transform hover:-translate-y-0.5 active:scale-[0.99]"
-      >
-        <KeyRound className="w-4 h-4" />
-        Try Demo
-      </button>
-    </div>
+            <button 
+              onClick={() => navigate('/demo')}
+              className="w-full sm:w-1/3 flex items-center justify-center gap-2 bg-amber-50/90 hover:bg-amber-100/90 text-amber-700 font-bold py-3.5 px-6 rounded-2xl border border-amber-300/80 transition transform hover:-translate-y-0.5 active:scale-[0.99]"
+            >
+              <KeyRound className="w-4 h-4 text-amber-500" />
+              Try Demo
+            </button>
+          </div>
 
-        {/* Feature Grid Infographics */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left border-t border-slate-200 dark:border-slate-800 pt-12">
-          <div className="flex gap-4 p-2">
-            <div className="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm text-indigo-600 dark:text-indigo-400 h-11 w-11 shrink-0 flex items-center justify-center">
-              <Wifi className="w-5 h-5" />
+          {/* Feature Grid Infographics */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left border-t border-slate-200/80 pt-12">
+            <div className="flex gap-4 p-4 rounded-2xl bg-white/95 backdrop-blur-sm border border-slate-200 shadow-sm hover:border-cyan-500/40 transition-colors">
+              <div className="bg-slate-100 p-3 rounded-xl border border-slate-200 text-cyan-600 h-11 w-11 shrink-0 flex items-center justify-center">
+                <Wifi className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="font-bold text-slate-900 text-sm mb-1 flex items-center gap-1.5">
+                  <span>1. Subnet Verification</span>
+                </h4>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Pins sessions strictly to authorized campus IP boundaries. Proxy proxies and off-site spoofing are rejected automatically.
+                </p>
+              </div>
             </div>
-            <div>
-              <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-1">1. Sync Network</h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Locks tracking to authorized campus network coordinates.</p>
+
+            <div className="flex gap-4 p-4 rounded-2xl bg-white/95 backdrop-blur-sm border border-slate-200 shadow-sm hover:border-indigo-500/40 transition-colors">
+              <div className="bg-slate-100 p-3 rounded-xl border border-slate-200 text-indigo-600 h-11 w-11 shrink-0 flex items-center justify-center">
+                <Fingerprint className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="font-bold text-slate-900 text-sm mb-1">2. Biometric Vector Map</h4>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Generates a client-side 128-float facial descriptor. Never sends raw unencrypted imagery over the wire.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-4 p-4 rounded-2xl bg-white/95 backdrop-blur-sm border border-slate-200 shadow-sm hover:border-emerald-500/40 transition-colors">
+              <div className="bg-slate-100 p-3 rounded-xl border border-slate-200 text-emerald-600 h-11 w-11 shrink-0 flex items-center justify-center">
+                <Camera className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="font-bold text-slate-900 text-sm mb-1">3. Liveness Check</h4>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Real-time active comparison prevents static photo presentation attacks with millisecond verification speed.
+                </p>
+              </div>
             </div>
           </div>
 
-          <div className="flex gap-4 p-2">
-            <div className="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm text-indigo-600 dark:text-indigo-400 h-11 w-11 shrink-0 flex items-center justify-center">
-              <Fingerprint className="w-5 h-5" />
+          {/* Security Trust Micro-Bar */}
+          <div className="mt-12 py-3 px-4 rounded-xl bg-white/80 backdrop-blur-sm border border-slate-200 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500 shadow-sm">
+            <div className="flex items-center gap-1.5 font-mono">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+              <span>256-bit Token Rotation</span>
             </div>
-            <div>
-              <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-1">2. Secure Session</h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Active authentication system drops multi-device entry leaks instantly.</p>
+            <span className="text-slate-300">&bull;</span>
+            <div className="flex items-center gap-1.5 font-mono">
+              <CheckCircle2 className="w-3.5 h-3.5 text-cyan-500" />
+              <span>Anti-Proxy Subnet Pinning</span>
             </div>
-          </div>
-
-          <div className="flex gap-4 p-2">
-            <div className="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm text-indigo-600 dark:text-indigo-400 h-11 w-11 shrink-0 flex items-center justify-center">
-              <Camera className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-1">3. Biometric Scan</h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Parses face layout profiles securely to map localized float markers.</p>
+            <span className="text-slate-300">&bull;</span>
+            <div className="flex items-center gap-1.5 font-mono">
+              <CheckCircle2 className="w-3.5 h-3.5 text-indigo-500" />
+              <span>Client-Side Liveness Analysis</span>
             </div>
           </div>
         </div>
@@ -114,3 +131,5 @@ export const Home= () => {
     </div>
   );
 };
+
+export default Home;

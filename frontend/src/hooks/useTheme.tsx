@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, type ReactNode } from 'react';
 
-export type Theme = 'light' | 'dark' | 'system';
+export type Theme = 'light';
 
 interface ThemeContextValue {
   theme: Theme;
@@ -10,32 +10,18 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem('attendease-theme') as Theme) || 'system'
-  );
-
   useEffect(() => {
     const root = window.document.documentElement;
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-    const applyTheme = () => {
-      root.classList.remove('light', 'dark');
-      const resolved = theme === 'system' ? (mediaQuery.matches ? 'dark' : 'light') : theme;
-      root.classList.add(resolved);
-    };
-
-    applyTheme();
-    localStorage.setItem('attendease-theme', theme);
-
-    // Listen for real-time system changes if 'system' is selected
-    if (theme === 'system') {
-      mediaQuery.addEventListener('change', applyTheme);
-      return () => mediaQuery.removeEventListener('change', applyTheme);
-    }
-  }, [theme]);
+    root.classList.remove('dark');
+    root.classList.add('light');
+    localStorage.removeItem('attendease-theme');
+    localStorage.removeItem('theme');
+    localStorage.setItem('attendease-theme', 'light');
+    localStorage.setItem('theme', 'light');
+  }, []);
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={{ theme: 'light', setTheme: () => {} }}>
       {children}
     </ThemeContext.Provider>
   );
