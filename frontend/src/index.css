@@ -1,3 +1,63 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    /* Brand & Accent Tokens (Light Mode Only) */
+    --brand-primary: #4F46E5;
+    --brand-primary-hover: #4338CA;
+    --brand-secondary: #06B6D4;
+    --scan-accent: #06B6D4;
+    --status-verified: #10B981;
+    --status-warning: #F59E0B;
+    --status-proxy-blocked: #F43F5E;
+
+    /* Light Mode Surfaces & Text */
+    --bg-primary: #FFFFFF;
+    --bg-surface: #FFFFFF;
+    --bg-surface-elevated: #F8FAFC;
+    --border-subtle: #E2E8F0;
+    --border-strong: #CBD5E1;
+    --text-primary: #0F172A;
+    --text-secondary: #64748B;
+    --text-muted: #94A3B8;
+  }
+
+  html {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  body {
+    background-color: #ffffff;
+    color: var(--text-primary);
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+}
+
+/* Custom Micro-Interaction & Scan Utilities */
+@keyframes scanline {
+  0% {
+    top: 0%;
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    top: 96%;
+    opacity: 0.8;
+  }
+}
+
+.animate-scanline {
+  animation: scanline 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Tamper-proof Radial Glow for WebSocket QR & Cryptographic Containers */
+.tamper-proof-qr-bg {
+  background: radial-gradient(circle at center, rgba(99, 102, 241, 0.16) 0%, rgba(6, 182, 212, 0.1) 45%, transparent 70%);
+}
